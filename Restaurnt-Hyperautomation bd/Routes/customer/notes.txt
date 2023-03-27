@@ -1,0 +1,98 @@
+{
+  "orderItems": [
+    {
+      "name": "Product 1",
+      "amount": 2,
+      "imageUrl": "https://example.com/product1.jpg",
+      "price": 9.99,
+      "product": "616316f7b95aa31531f7be0d"
+    },
+    {
+      "name": "Product 2",
+      "amount": 1,
+      "imageUrl": "https://example.com/product2.jpg",
+      "price": 19.99,
+      "product": "616316f7b95aa31531f7be0e"
+    }
+  ],
+  "shippingAddress": {
+    "address": "123 Main St",
+    "city": "Anytown",
+    "postalCode": "12345",
+    "country": "USA"
+  },
+  "paymentMethod": "PayPal",
+  "taxPrice": 4.50,
+  "shippingPrice": 5.00,
+  "totalPrice": 39.47
+}
+// POST /api/orders
+router.post("/api/orders", async (req, res) => {
+    try {
+      const { orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
+      const order = new Orderfromweb({
+        user: req.user._id,
+        orderItems,
+        shippingAddress,
+        paymentMethod,
+        taxPrice,
+        shippingPrice,
+        totalPrice,
+      });
+      const createdOrder = await order.save();
+      res.status(201).send({ message: "New order created", order: createdOrder });
+    } catch (error) {
+      res.status(500).send({ message: "Error creating order", error: error });
+    }
+  });
+  
+  module.exports = router;
+  
+  In this example, the route handler receives the order data from the client-side using the req.body object. The user field is populated with the current user's ID, which is obtained from the req.user object (assuming that you are using some form of authentication middleware to set req.user).
+  
+  Then, a new Orderfromweb instance is created using the received order data. The save() method is called on the new order instance to save it to the database. If the save operation is successful, a response with a 201 Created status code is sent back to the client with a message indicating that a new order has been created, as well as the created order object. If there is an error while saving the order, a response with a 500 Internal Server Error status code is sent back to the client with an error message.
+  siva siva
+  give sameple data to insert into post method using ordermodule
+  
+  Sure, here is an example of data that you can use to test the POST method for creating a new order using the Orderfromweb Mongoose model:
+  
+  css
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const express = require('express');
+const request = require('request');
+const cheerio = require('cheerio');
+
+const app = express();
+
+app.get('/', (req, res) => {
+  const url = 'http://localhost:3000/s';
+  request(url, (error, response, html) => {
+    if (!error && response.statusCode == 200) {
+      const $ = cheerio.load(html);
+      const data = [];
+      $('selector').each((index, element) => {
+        const item = $(element).text();
+        data.push(item);
+      });
+      res.send(data);
+    }
+  });
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
